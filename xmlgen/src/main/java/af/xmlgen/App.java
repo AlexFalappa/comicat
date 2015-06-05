@@ -1,3 +1,5 @@
+package af.xmlgen;
+
 import af.model.*;
 
 import javax.xml.bind.JAXBContext;
