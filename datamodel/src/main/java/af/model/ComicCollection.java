@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * A collection of comics.
+ * This object is mainly used as a container for grouping <tt>Comic</tt> objects in XML binding.
  * Created by sasha on 29/05/15.
  */
 @XmlRootElement(name = "collection")

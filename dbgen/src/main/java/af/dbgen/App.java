@@ -7,10 +7,7 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -58,33 +55,44 @@ public class App {
             clp.printSingleLineUsage(System.err);
             clp.printUsage(System.err);
             System.exit(1);
+        } catch (PersistenceException pe) {
+            pe.printStackTrace();
+            System.exit(1);
         }
     }
 
     private static void persistComics(EntityManager em) {
-        Comic c1 = new Comic();
-        c1.setTitle("Ringo");
-        c1.setIssue(9);
-        c1.setType(ComicType.PERIODICAL);
-        c1.setFrequency(Frequency.MONTHLY);
-        c1.setPublishDate(new Date());
-        c1.setGenre(Genre.SCIENCE_FICTION);
-        c1.setPublisher("Bonelli");
         Author a1 = new Author("Antonio", "Serra");
-        c1.getArtBy().add(a1);
         Author a2 = new Author("Gianni", "Cavazzano");
-        c1.getTextBy().add(a2);
-        c1.setPages(38);
-        c1.setPrice(BigDecimal.valueOf(4.5));
-
-        Comic c2 = new Comic();
-        c2.setTitle("Nathan Never");
-        c2.getArtBy().add(a1);
-        c2.getTextBy().add(a2);
-        c2.setIssue(123);
 
         em.persist(a1);
         em.persist(a2);
+
+        Comic c1 = new Comic();
+        c1.setTitle("Ringo");
+        c1.setType(ComicType.PERIODICAL);
+        c1.setFrequency(Frequency.MONTHLY);
+        c1.setGenre(Genre.SCIENCE_FICTION);
+        c1.setPublisher("Bonelli");
+        ComicIssue issue = new ComicIssue();
+        issue.setNumber(9);
+        issue.setPublishDate(new Date());
+        issue.getArtBy().add(a1);
+        issue.getTextBy().add(a2);
+        issue.setPages(38);
+        issue.setPrice(BigDecimal.valueOf(4.5));
+        em.persist(issue);
+        c1.getIssues().add(issue);
+
+        Comic c2 = new Comic();
+        c2.setTitle("Nathan Never");
+        ComicIssue issue2 = new ComicIssue();
+        issue2.getArtBy().add(a1);
+        issue2.getTextBy().add(a2);
+        issue2.setNumber(123);
+        em.persist(issue2);
+        c2.getIssues().add(issue2);
+
         em.persist(c1);
         em.persist(c2);
     }
@@ -94,28 +102,31 @@ public class App {
         for (int i = 0; i < cla.recNum; i++) {
             //TODO mostrare un progresso ogni tot record generati
             // basic attributes
-            Comic c = new Comic(RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(15)), genComicTpe(), rgen.nextInt(1000));
+            Comic c = new Comic(RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(15)), genComicTpe());
             c.setPublisher(RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10)));
             // authors
-            c.getArtBy().add(genAuthor(em));
+            ComicIssue issue = new ComicIssue(rgen.nextInt(1000));
+            issue.getArtBy().add(genAuthor(em));
             if (rgen.nextDouble() < 0.4) {
-                c.getTextBy().add(genAuthor(em));
+                issue.getTextBy().add(genAuthor(em));
             }
             if (rgen.nextDouble() < 0.2) {
-                c.getColoursBy().add(genAuthor(em));
+                issue.getColoursBy().add(genAuthor(em));
             }
             if (rgen.nextDouble() < 0.2) {
-                c.getInkBy().add(genAuthor(em));
+                issue.getInkBy().add(genAuthor(em));
             }
             if (rgen.nextDouble() < 0.1) {
-                c.getCoverBy().add(genAuthor(em));
+                issue.getCoverBy().add(genAuthor(em));
             }
+            issue.setPrice(BigDecimal.valueOf(20.0 * rgen.nextDouble()));
+            em.persist(issue);
+            c.getIssues().add(issue);
             // series
             if (rgen.nextDouble() < 0.7) {
                 c.setSeries(genSeries());
             }
             // other
-            c.setPrice(BigDecimal.valueOf(20.0 * rgen.nextDouble()));
             c.setFrequency(genFreq());
             //TODO aggiungere altri attributi
             em.persist(c);

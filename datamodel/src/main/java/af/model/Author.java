@@ -24,15 +24,15 @@ public class Author {
     private String name;
     private String surname;
     @ManyToMany(mappedBy = "artBy")
-    private Collection<Comic> drawnComics;
+    private Collection<ComicIssue> drawnComics;
     @ManyToMany(mappedBy = "textBy")
-    private Collection<Comic> writtenComics;
+    private Collection<ComicIssue> writtenComics;
     @ManyToMany(mappedBy = "coverBy")
-    private Collection<Comic> coverDrawnComics;
+    private Collection<ComicIssue> coverDrawnComics;
     @ManyToMany(mappedBy = "coloursBy")
-    private Collection<Comic> colouredComics;
+    private Collection<ComicIssue> colouredComics;
     @ManyToMany(mappedBy = "inkBy")
-    private Collection<Comic> inkedComics;
+    private Collection<ComicIssue> inkedComics;
 
     public Author() {
     }
@@ -63,43 +63,43 @@ public class Author {
         this.surname = surname;
     }
 
-    public Collection<Comic> getDrawnComics() {
+    public Collection<ComicIssue> getDrawnComics() {
         return drawnComics;
     }
 
-    public void setDrawnComics(Collection<Comic> drawnComics) {
+    public void setDrawnComics(Collection<ComicIssue> drawnComics) {
         this.drawnComics = drawnComics;
     }
 
-    public Collection<Comic> getWrittenComics() {
+    public Collection<ComicIssue> getWrittenComics() {
         return writtenComics;
     }
 
-    public void setWrittenComics(Collection<Comic> writtenComics) {
+    public void setWrittenComics(Collection<ComicIssue> writtenComics) {
         this.writtenComics = writtenComics;
     }
 
-    public Collection<Comic> getCoverDrawnComics() {
+    public Collection<ComicIssue> getCoverDrawnComics() {
         return coverDrawnComics;
     }
 
-    public void setCoverDrawnComics(Collection<Comic> coverDrawnComics) {
+    public void setCoverDrawnComics(Collection<ComicIssue> coverDrawnComics) {
         this.coverDrawnComics = coverDrawnComics;
     }
 
-    public Collection<Comic> getColouredComics() {
+    public Collection<ComicIssue> getColouredComics() {
         return colouredComics;
     }
 
-    public void setColouredComics(Collection<Comic> colouredComics) {
+    public void setColouredComics(Collection<ComicIssue> colouredComics) {
         this.colouredComics = colouredComics;
     }
 
-    public Collection<Comic> getInkedComics() {
+    public Collection<ComicIssue> getInkedComics() {
         return inkedComics;
     }
 
-    public void setInkedComics(Collection<Comic> inkedComics) {
+    public void setInkedComics(Collection<ComicIssue> inkedComics) {
         this.inkedComics = inkedComics;
     }
 }

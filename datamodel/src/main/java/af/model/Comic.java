@@ -5,10 +5,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A comic issue.
@@ -20,14 +17,12 @@ import java.util.Set;
 @Entity
 @Table(indexes = {
         @Index(columnList = "title", unique = true),
-        @Index(columnList = "publishdate")
 })
 @NamedQueries({
         @NamedQuery(name = "Comic.findByTitle", query = "select c from Comic c where c.title=:title"),
         @NamedQuery(name = "Comic.findBySeries", query = "select c from Comic c where c.series.seriesName=:snm"),
-        @NamedQuery(name = "Comic.findByPubDate", query = "select c from Comic c where c.publishDate=:pubdate"),
 })
-@XmlType(propOrder = {"title", "issue", "subTitle", "series", "seriesIssue", "frequency", "publishDate", "publisher", "genre", "pages", "price", "artBy","textBy","coverBy","inkBy","coloursBy", "country", "language", "notes"})
+@XmlType(propOrder = {"title", "subTitle", "series", "seriesIssue", "frequency", "publisher", "genre", "country", "language", "notes","issues"})
 public class Comic {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,49 +30,37 @@ public class Comic {
     private ComicType type;
     private String publisher;
     private Series series;
-    private int seriesIssue;
+    private Integer seriesIssue;
     private String title;
     private String subTitle;
-    private int issue;
-    @Temporal(TemporalType.DATE)
-    private Date publishDate;
     private Frequency frequency;
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "comic_art_author")
-    private Set<Author> artBy = new HashSet<>(4);
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "comic_text_author")
-    private Set<Author> textBy = new HashSet<>(4);
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "comic_cover_author")
-    private Set<Author> coverBy = new HashSet<>(4);
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "comic_colours_author")
-    private Set<Author> coloursBy = new HashSet<>(4);
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "comic_ink_author")
-    private Set<Author> inkBy = new HashSet<>(4);
     @Enumerated(EnumType.STRING)
     private Genre genre;
     private String country;
     private String language;
-    private int pages;
-    private BigDecimal price;
     @Lob
     private String notes;
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] cover;
+    @OneToMany
+    private List<ComicIssue> issues = new ArrayList<>();
     @Version
     private Date lastUpdate;
 
     public Comic() {
     }
 
-    public Comic(String title, ComicType type, int issue) {
+    public Comic(String title, ComicType type) {
         this.title = title;
         this.type = type;
-        this.issue = issue;
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "issue")
+    public List<ComicIssue> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(List<ComicIssue> issues) {
+        this.issues = issues;
     }
 
     public String getNotes() {
@@ -86,22 +69,6 @@ public class Comic {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public int getPages() {
-        return pages;
-    }
-
-    public void setPages(int pages) {
-        this.pages = pages;
     }
 
     public String getLanguage() {
@@ -128,78 +95,12 @@ public class Comic {
         this.genre = genre;
     }
 
-    @XmlElementWrapper
-    @XmlElement(name = "author")
-    public Set<Author> getInkBy() {
-        return inkBy;
-    }
-
-    public void setInkBy(Set<Author> inkBy) {
-        this.inkBy = inkBy;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "author")
-    public Set<Author> getColoursBy() {
-        return coloursBy;
-    }
-
-    public void setColoursBy(Set<Author> coloursBy) {
-        this.coloursBy = coloursBy;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "author")
-    public Set<Author> getCoverBy() {
-        return coverBy;
-    }
-
-    public void setCoverBy(Set<Author> coverBy) {
-        this.coverBy = coverBy;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "author")
-    public Set<Author> getTextBy() {
-        return textBy;
-    }
-
-    public void setTextBy(Set<Author> textBy) {
-        this.textBy = textBy;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "author")
-    public Set<Author> getArtBy() {
-        return artBy;
-    }
-
-    public void setArtBy(Set<Author> artBy) {
-        this.artBy = artBy;
-    }
-
     public Frequency getFrequency() {
         return frequency;
     }
 
     public void setFrequency(Frequency frequency) {
         this.frequency = frequency;
-    }
-
-    public Date getPublishDate() {
-        return publishDate;
-    }
-
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
-    }
-
-    public int getIssue() {
-        return issue;
-    }
-
-    public void setIssue(int issue) {
-        this.issue = issue;
     }
 
     public String getSubTitle() {
@@ -218,11 +119,11 @@ public class Comic {
         this.title = title;
     }
 
-    public int getSeriesIssue() {
+    public Integer getSeriesIssue() {
         return seriesIssue;
     }
 
-    public void setSeriesIssue(int seriesIssue) {
+    public void setSeriesIssue(Integer seriesIssue) {
         this.seriesIssue = seriesIssue;
     }
 
