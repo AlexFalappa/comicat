@@ -27,8 +27,7 @@ import java.util.Set;
         @NamedQuery(name = "Comic.findBySeries", query = "select c from Comic c where c.series.seriesName=:snm"),
         @NamedQuery(name = "Comic.findByPubDate", query = "select c from Comic c where c.publishDate=:pubdate"),
 })
-@XmlType(propOrder = {"title", "issue", "subTitle", "series", "seriesIssue", "frequency", "publishDate", "publisher", "genre", "pages", "price", "artBy", "country", "language", "notes"})
-//,"textBy","coverBy","inkBy","coloursBy"
+@XmlType(propOrder = {"title", "issue", "subTitle", "series", "seriesIssue", "frequency", "publishDate", "publisher", "genre", "pages", "price", "artBy","textBy","coverBy","inkBy","coloursBy", "country", "language", "notes"})
 public class Comic {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
