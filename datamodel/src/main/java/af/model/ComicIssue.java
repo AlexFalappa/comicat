@@ -1,6 +1,7 @@
 package af.model;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
@@ -11,20 +12,28 @@ import java.util.Set;
 
 /**
  * An issue of a Comic.
+ * <p>
+ * Class annotated for use with JAXB Object-XML mapping and JPA Object-Relational mapping.
  * Created by sasha on 06/06/15.
  */
 @Entity
+@IdClass(ComicIssueKey.class)
 @Table(indexes = {
         @Index(columnList = "publishdate")
+})
+@NamedQueries({
+        @NamedQuery(name = "ComicIssue.findByNumber", query = "select i from ComicIssue i where i.number=:num"),
+        @NamedQuery(name = "ComicIssue.findByDate", query = "select i from ComicIssue i where i.publishDate=:pubDate"),
 })
 @XmlType(propOrder = {"number", "publishDate", "pages", "price", "artBy","textBy","coverBy","inkBy","coloursBy"})
 public class ComicIssue {
     @Id
+    @ManyToOne
+    private Comic comic;
+    @Id
     private int number;
     @Temporal(TemporalType.DATE)
     private Date publishDate;
-    @ManyToOne
-    private Comic comic;
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "issue_art_author")
     private Set<Author> artBy = new HashSet<>(4);
@@ -129,11 +138,20 @@ public class ComicIssue {
         this.publishDate = publishDate;
     }
 
+    @XmlAttribute
     public int getNumber() {
         return number;
     }
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public Comic getComic() {
+        return comic;
+    }
+
+    public void setComic(Comic comic) {
+        this.comic = comic;
     }
 }

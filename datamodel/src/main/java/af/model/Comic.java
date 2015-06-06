@@ -40,7 +40,7 @@ public class Comic {
     private String language;
     @Lob
     private String notes;
-    @OneToMany
+    @OneToMany(mappedBy = "comic")
     private List<ComicIssue> issues = new ArrayList<>();
     @Version
     private Date lastUpdate;

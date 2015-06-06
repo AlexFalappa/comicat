@@ -38,14 +38,22 @@ public class App {
             EntityManager em = emf.createEntityManager();
             try {
                 // populate db
+                log.info("------ Population -------");
                 em.getTransaction().begin();
                 generateComics(cla, em);
                 persistComics(em);
                 em.getTransaction().commit();
                 // query db
-                Query q = em.createNamedQuery("Comic.findByTitle", Comic.class);
+                log.info("------ Query -------");
+                TypedQuery<Comic> q = em.createNamedQuery("Comic.findByTitle", Comic.class);
                 q.setParameter("title", "Ringo");
-                Object res = q.getSingleResult();
+                Comic result = q.getSingleResult();
+                log.info("Issues: {}", result.getIssues().size());
+                log.info("First issue number: {}", result.getIssues().get(0).getNumber());
+                TypedQuery<ComicIssue> q2 = em.createNamedQuery("ComicIssue.findByNumber", ComicIssue.class);
+                q2.setParameter("num", 9);
+                ComicIssue issue = q2.getSingleResult();
+                log.info("Comic of issue 9: {}",issue.getComic().getTitle());
             } finally {
                 em.close();
                 emf.close();
@@ -62,9 +70,9 @@ public class App {
     }
 
     private static void persistComics(EntityManager em) {
+        log.info("Persisting 'known' comics");
         Author a1 = new Author("Antonio", "Serra");
         Author a2 = new Author("Gianni", "Cavazzano");
-
         em.persist(a1);
         em.persist(a2);
 
@@ -74,6 +82,7 @@ public class App {
         c1.setFrequency(Frequency.MONTHLY);
         c1.setGenre(Genre.SCIENCE_FICTION);
         c1.setPublisher("Bonelli");
+
         ComicIssue issue = new ComicIssue();
         issue.setNumber(9);
         issue.setPublishDate(new Date());
@@ -81,20 +90,20 @@ public class App {
         issue.getTextBy().add(a2);
         issue.setPages(38);
         issue.setPrice(BigDecimal.valueOf(4.5));
+        issue.setComic(c1);
         em.persist(issue);
-        c1.getIssues().add(issue);
 
-        Comic c2 = new Comic();
-        c2.setTitle("Nathan Never");
         ComicIssue issue2 = new ComicIssue();
-        issue2.getArtBy().add(a1);
-        issue2.getTextBy().add(a2);
-        issue2.setNumber(123);
+        issue2.setNumber(10);
+        issue2.setPublishDate(new Date());
+        issue2.setPages(54);
+        issue2.getArtBy().add(a2);
+        issue2.setComic(c1);
         em.persist(issue2);
-        c2.getIssues().add(issue2);
 
+        c1.getIssues().add(issue);
+        c1.getIssues().add(issue2);
         em.persist(c1);
-        em.persist(c2);
     }
 
     private static void generateComics(CmdLineArgs cla, EntityManager em) {
@@ -120,6 +129,7 @@ public class App {
                 issue.getCoverBy().add(genAuthor(em));
             }
             issue.setPrice(BigDecimal.valueOf(20.0 * rgen.nextDouble()));
+            issue.setComic(c);
             em.persist(issue);
             c.getIssues().add(issue);
             // series
