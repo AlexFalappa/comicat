@@ -29,6 +29,7 @@ public class Comic {
     private long id;
     private ComicType type;
     private String publisher;
+    @OneToOne()
     private Series series;
     private Integer seriesIssue;
     private String title;

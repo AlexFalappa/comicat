@@ -1,14 +1,24 @@
 package af.model;
 
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 
 /**
  * A comic series.
  * Created by sasha on 23/05/15.
  */
-@Embeddable
+@Entity
 public class Series {
-    String seriesName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    private String seriesName;
+
+    public Series() {
+    }
+
+    public Series(String seriesName) {
+        this.seriesName = seriesName;
+    }
 
     public String getSeriesName() {
         return seriesName;

@@ -134,7 +134,7 @@ public class App {
             c.getIssues().add(issue);
             // series
             if (rgen.nextDouble() < 0.7) {
-                c.setSeries(genSeries());
+                c.setSeries(genSeries(em));
             }
             // other
             c.setFrequency(genFreq());
@@ -143,12 +143,13 @@ public class App {
         }
     }
 
-    private static Series genSeries() {
+    private static Series genSeries(EntityManager em) {
         if (rgen.nextDouble() < 0.8 && !seriesCache.isEmpty()) {
             return seriesCache.get(rgen.nextInt(seriesCache.size()));
         } else {
             Series s = new Series();
             s.setSeriesName(RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10)));
+            em.persist(s);
             seriesCache.add(s);
             return s;
         }
