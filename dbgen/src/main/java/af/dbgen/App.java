@@ -53,7 +53,7 @@ public class App {
                 TypedQuery<ComicIssue> q2 = em.createNamedQuery("ComicIssue.findByNumber", ComicIssue.class);
                 q2.setParameter("num", 9);
                 ComicIssue issue = q2.getSingleResult();
-                log.info("Comic of issue 9: {}",issue.getComic().getTitle());
+                log.info("Comic of issue 9: {}", issue.getComic().getTitle());
             } finally {
                 em.close();
                 emf.close();

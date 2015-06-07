@@ -24,7 +24,7 @@ import java.util.List;
         @NamedQuery(name = "Comic.findByTitle", query = "select c from Comic c where c.title=:title"),
         @NamedQuery(name = "Comic.findBySeries", query = "select c from Comic c where c.series.name=:snm"),
 })
-@XmlType(propOrder = {"title", "subTitle", "series", "seriesIssue", "frequency", "publisher", "genre", "country", "language", "notes","issues"})
+@XmlType(propOrder = {"title", "subTitle", "series", "seriesIssue", "frequency", "publisher", "genre", "country", "language", "notes", "issues"})
 public class Comic {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Key for ComicIssue.
  * Created by sasha on 06/06/15.
  */
-public class ComicIssueKey implements Serializable{
+public class ComicIssueKey implements Serializable {
     private Comic comic;
     private int number;
 
