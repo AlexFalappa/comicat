@@ -2,6 +2,7 @@ package af.dbgen;
 
 import af.model.*;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.slf4j.Logger;
@@ -19,8 +20,8 @@ import java.util.*;
  * <p>
  * Created by sasha on 01/06/15.
  */
-public class App {
-    public static final Logger log = LoggerFactory.getLogger(App.class);
+public class CreateApp {
+    public static final Logger log = LoggerFactory.getLogger(CreateApp.class);
     private static Random rgen = new Random();
     private static List<Author> authCache = new ArrayList<>();
     private static List<Series> seriesCache = new ArrayList<>();
@@ -36,47 +37,49 @@ public class App {
                 clp.printUsage(System.err);
                 System.exit(1);
             }
-            log.info("dbgen started");
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu.comic", emfPropsFrom(cla));
-            EntityManager em = emf.createEntityManager();
-            try {
-                // populate db
-                log.info("------ Population -------");
-                em.getTransaction().begin();
-                generateComics(cla, em);
-                persistComics(em);
-                em.getTransaction().commit();
-                // query db
-                log.info("------ Query -------");
-                TypedQuery<Comic> q = em.createNamedQuery("Comic.findByTitle", Comic.class);
-                q.setParameter("title", "Ringo");
-                Comic result = q.getSingleResult();
-                log.info("Issues: {}", result.getIssues().size());
-                log.info("First issue number: {}", result.getIssues().get(0).getNumber());
-                TypedQuery<ComicIssue> q2 = em.createNamedQuery("ComicIssue.findByNumber", ComicIssue.class);
-                q2.setParameter("num", 9);
-                ComicIssue issue = q2.getSingleResult();
-                log.info("Comic of issue 9: {}", issue.getComic().getTitle());
-                // xml export
-                log.info("------ XML export -------");
-                log.info("All comics:");
-                ComicCollection cc = ComicCollection.fromDbAll(em);
-                xmlMarshal(cc);
-                log.info("Ringo comics:");
-                cc = ComicCollection.fromDbQuery("RingoComics", "select c from Comic c where c.title='Ringo'", em);
-                xmlMarshal(cc);
-            } finally {
-                em.close();
-                emf.close();
-            }
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             clp.printSingleLineUsage(System.err);
             clp.printUsage(System.err);
             System.exit(1);
+        }
+        log.info("dbgen started");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu.comic", emfPropsFrom(cla));
+        EntityManager em = emf.createEntityManager();
+        try {
+            // populate db
+            log.info("------ Population -------");
+            em.getTransaction().begin();
+            generateComics(cla, em);
+            persistComics(em);
+            em.getTransaction().commit();
+            // query db
+            log.info("------ Query -------");
+            TypedQuery<Comic> q = em.createNamedQuery("Comic.findByTitle", Comic.class);
+            q.setParameter("title", "Ringo");
+            Comic result = q.getSingleResult();
+            log.info("Issues: {}", result.getIssues().size());
+            if (!result.getIssues().isEmpty()) {
+                log.info(StringUtils.join(result.getIssues(), ", "));
+            }
+            TypedQuery<ComicIssue> q2 = em.createNamedQuery("ComicIssue.findByNumber", ComicIssue.class);
+            q2.setParameter("num", 9);
+            ComicIssue issue = q2.getSingleResult();
+            log.info("Comic of issue 9: {}", issue.getComic().getTitle());
+            // xml export
+            log.info("------ XML export -------");
+            log.info("All comics:");
+            ComicCollection cc = ComicCollection.fromDbAll(em);
+            xmlMarshal(cc);
+            log.info("Ringo comics:");
+            cc = ComicCollection.fromDbQuery("RingoComics", "select c from Comic c where c.title='Ringo'", em);
+            xmlMarshal(cc);
         } catch (PersistenceException | JAXBException pe) {
             pe.printStackTrace();
             System.exit(1);
+        } finally {
+            em.close();
+            emf.close();
         }
     }
 
@@ -94,8 +97,7 @@ public class App {
         c1.setGenre(Genre.SCIENCE_FICTION);
         c1.setPublisher("Bonelli");
 
-        ComicIssue issue = new ComicIssue();
-        issue.setNumber(9);
+        ComicIssue issue = new ComicIssue(9);
         issue.setPublishDate(new Date());
         issue.getArtBy().add(a1);
         issue.getTextBy().add(a2);
@@ -104,8 +106,7 @@ public class App {
         issue.setComic(c1);
         em.persist(issue);
 
-        ComicIssue issue2 = new ComicIssue();
-        issue2.setNumber(10);
+        ComicIssue issue2 = new ComicIssue(10);
         issue2.setPublishDate(new Date());
         issue2.setPages(54);
         issue2.getArtBy().add(a2);
@@ -187,6 +188,7 @@ public class App {
 
     private static Map<String, String> emfPropsFrom(CmdLineArgs cla) {
         Map<String, String> props = new HashMap<>();
+        props.put("javax.persistence.schema-generation.database.action", "drop-and-create");
         if (cla.jdbcDriver != null) {
             props.put("javax.persistence.jdbc.driver", cla.jdbcDriver);
         }

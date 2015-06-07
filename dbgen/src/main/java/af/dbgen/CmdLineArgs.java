@@ -4,7 +4,7 @@ import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
 /**
- * Command line arguments for af.dbgen.App.
+ * Command line arguments for af.dbgen.CreateApp.
  * Uses args4j library.
  * Created by sasha on 01/06/15.
  */
