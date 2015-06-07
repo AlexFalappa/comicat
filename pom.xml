@@ -12,7 +12,6 @@
     <modules>
         <module>datamodel</module>
         <module>dbgen</module>
-        <module>xmlgen</module>
     </modules>
 
     <properties>
