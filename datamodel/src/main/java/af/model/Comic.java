@@ -21,6 +21,7 @@ import java.util.List;
         @Index(columnList = "title", unique = true),
 })
 @NamedQueries({
+        @NamedQuery(name = "Comic.findByAll", query = "select c from Comic c"),
         @NamedQuery(name = "Comic.findByTitle", query = "select c from Comic c where c.title=:title"),
         @NamedQuery(name = "Comic.findBySeries", query = "select c from Comic c where c.series.name=:snm"),
 })

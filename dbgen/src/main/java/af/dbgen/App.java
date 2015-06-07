@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -54,6 +57,14 @@ public class App {
                 q2.setParameter("num", 9);
                 ComicIssue issue = q2.getSingleResult();
                 log.info("Comic of issue 9: {}", issue.getComic().getTitle());
+                // xml export
+                log.info("------ XML export -------");
+                log.info("All comics:");
+                ComicCollection cc = ComicCollection.fromDbAll(em);
+                xmlMarshal(cc);
+                log.info("Ringo comics:");
+                cc = ComicCollection.fromDbQuery("RingoComics", "select c from Comic c where c.title='Ringo'", em);
+                xmlMarshal(cc);
             } finally {
                 em.close();
                 emf.close();
@@ -63,7 +74,7 @@ public class App {
             clp.printSingleLineUsage(System.err);
             clp.printUsage(System.err);
             System.exit(1);
-        } catch (PersistenceException pe) {
+        } catch (PersistenceException | JAXBException pe) {
             pe.printStackTrace();
             System.exit(1);
         }
@@ -189,5 +200,12 @@ public class App {
             props.put("javax.persistence.jdbc.password", cla.jdbcPassw);
         }
         return props;
+    }
+
+    private static void xmlMarshal(ComicCollection cl) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(ComicCollection.class);
+        Marshaller m = context.createMarshaller();
+        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        m.marshal(cl, System.out);
     }
 }

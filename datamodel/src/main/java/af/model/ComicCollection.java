@@ -1,5 +1,7 @@
 package af.model;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,8 +27,20 @@ public class ComicCollection {
         return null;
     }
 
-    public static ComicCollection fromQuery(String q) {
-        return null;
+    public static ComicCollection fromDbAll(EntityManager em) {
+        ComicCollection cc = new ComicCollection();
+        cc.name = "AllComics";
+        TypedQuery<Comic> tq = em.createNamedQuery("Comic.findByAll", Comic.class);
+        cc.comics = tq.getResultList();
+        return cc;
+    }
+
+    public static ComicCollection fromDbQuery(String collName, String queryString, EntityManager em) {
+        ComicCollection cc = new ComicCollection();
+        cc.name = collName;
+        TypedQuery<Comic> tq = em.createQuery(queryString, Comic.class);
+        cc.comics = tq.getResultList();
+        return cc;
     }
 
     @XmlAttribute
