@@ -5,7 +5,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * A comic issue.
@@ -20,7 +22,7 @@ import java.util.*;
 })
 @NamedQueries({
         @NamedQuery(name = "Comic.findByTitle", query = "select c from Comic c where c.title=:title"),
-        @NamedQuery(name = "Comic.findBySeries", query = "select c from Comic c where c.series.seriesName=:snm"),
+        @NamedQuery(name = "Comic.findBySeries", query = "select c from Comic c where c.series.name=:snm"),
 })
 @XmlType(propOrder = {"title", "subTitle", "series", "seriesIssue", "frequency", "publisher", "genre", "country", "language", "notes","issues"})
 public class Comic {

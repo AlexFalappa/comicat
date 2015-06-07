@@ -148,7 +148,7 @@ public class App {
             return seriesCache.get(rgen.nextInt(seriesCache.size()));
         } else {
             Series s = new Series();
-            s.setSeriesName(RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10)));
+            s.setName(RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10)));
             em.persist(s);
             seriesCache.add(s);
             return s;

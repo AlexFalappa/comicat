@@ -14,8 +14,12 @@ import java.util.Date;
  */
 public class App {
     public static void main(String[] args) throws JAXBException {
+        Series s = new Series();
+        s.setName("BonelliFantascienza");
+
         Author a1 = new Author("Antonio", "Serra");
         Author a2 = new Author("Gianni", "Cavazzano");
+        Author a3 = new Author("Paolo", "Vigna");
 
         Comic c1 = new Comic();
         c1.setTitle("Ringo");
@@ -23,8 +27,9 @@ public class App {
         c1.setFrequency(Frequency.MONTHLY);
         c1.setGenre(Genre.SCIENCE_FICTION);
         c1.setPublisher("Bonelli");
-        ComicIssue issue = new ComicIssue();
-        issue.setNumber(9);
+        c1.setSeries(s);
+        ComicIssue issue = new ComicIssue(9);
+        issue.setComic(c1);
         issue.setPublishDate(new Date());
         issue.getArtBy().add(a1);
         issue.getTextBy().add(a2);
@@ -34,13 +39,15 @@ public class App {
 
         Comic c2 = new Comic();
         c2.setTitle("Nathan Never");
-        ComicIssue issue2 = new ComicIssue();
+        c2.setSeries(s);
+        ComicIssue issue2 = new ComicIssue(123);
+        issue2.setPublishDate(new Date());
         issue2.getArtBy().add(a1);
-        issue2.getTextBy().add(a2);
-        issue2.setNumber(123);
+        issue2.getTextBy().add(a3);
         c2.getIssues().add(issue2);
 
         ComicCollection cl = new ComicCollection();
+        cl.setName("scifi");
         cl.getComics().add(c1);
         cl.getComics().add(c2);
 

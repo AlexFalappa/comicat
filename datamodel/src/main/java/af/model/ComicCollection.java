@@ -1,9 +1,12 @@
 package af.model;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,8 +15,10 @@ import java.util.List;
  * Created by sasha on 29/05/15.
  */
 @XmlRootElement(name = "collection")
+@XmlType(propOrder = {"created", "comics"})
 public class ComicCollection {
-    @XmlElement(name = "comic")
+    private String name;
+    private final Date created = new Date();
     private List<Comic> comics = new ArrayList<>();
 
     static ComicCollection fromXml(File xmlFile) {
@@ -21,10 +26,24 @@ public class ComicCollection {
     }
 
     public static ComicCollection fromQuery(String q) {
-        ComicCollection ret = new ComicCollection();
-        return ret;
+        return null;
     }
 
+    @XmlAttribute
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @XmlElement
+    public Date getCreated() {
+        return created;
+    }
+
+    @XmlElement(name = "comic")
     public List<Comic> getComics() {
         return comics;
     }

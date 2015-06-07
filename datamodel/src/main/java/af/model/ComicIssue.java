@@ -1,10 +1,7 @@
 package af.model;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -147,6 +144,7 @@ public class ComicIssue {
         this.number = number;
     }
 
+    @XmlTransient
     public Comic getComic() {
         return comic;
     }
