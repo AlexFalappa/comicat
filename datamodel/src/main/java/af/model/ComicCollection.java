@@ -61,4 +61,9 @@ public class ComicCollection {
     public List<Comic> getComics() {
         return comics;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ComicCollection{%s on %s}", name, created);
+    }
 }

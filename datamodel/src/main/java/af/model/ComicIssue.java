@@ -152,4 +152,9 @@ public class ComicIssue {
     public void setComic(Comic comic) {
         this.comic = comic;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ComicIssue{%d of %s}", number, comic);
+    }
 }

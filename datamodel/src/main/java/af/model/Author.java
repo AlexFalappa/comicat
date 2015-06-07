@@ -102,4 +102,9 @@ public class Author {
     public void setInkedComics(Collection<ComicIssue> inkedComics) {
         this.inkedComics = inkedComics;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Author{%d: %s %s}", id, name, surname);
+    }
 }

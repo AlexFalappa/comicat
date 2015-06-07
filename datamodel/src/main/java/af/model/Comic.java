@@ -161,4 +161,8 @@ public class Comic {
         return id;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Comic{%d: %s}", id, title);
+    }
 }

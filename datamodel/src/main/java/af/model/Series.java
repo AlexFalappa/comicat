@@ -32,4 +32,9 @@ public class Series {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Series{%d: %s}", id, name);
+    }
 }
