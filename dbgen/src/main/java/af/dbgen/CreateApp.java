@@ -24,6 +24,7 @@ import java.util.*;
  */
 public class CreateApp {
     public static final Logger log = LoggerFactory.getLogger(CreateApp.class);
+    private static final Genre[] GENRES = Genre.class.getEnumConstants();
     private static Random rgen = new Random();
     private static List<Author> authCache = new ArrayList<>();
     private static List<Series> seriesCache = new ArrayList<>();
@@ -52,8 +53,8 @@ public class CreateApp {
             // populate db
             log.info("------ Population -------");
             em.getTransaction().begin();
-            generateComics(cla, em);
-            persistComics(em);
+            knownComics(em);
+            randComics(cla, em);
             em.getTransaction().commit();
             if (cla.xmlExport) {
                 // xml export
@@ -74,7 +75,7 @@ public class CreateApp {
         }
     }
 
-    private static void persistComics(EntityManager em) {
+    private static void knownComics(EntityManager em) {
         log.info("Persisting 'known' comics");
         Author a1 = new Author("Antonio", "Serra");
         Author a2 = new Author("Gianni", "Cavazzano");
@@ -107,41 +108,67 @@ public class CreateApp {
         em.persist(c1);
     }
 
-    private static void generateComics(CmdLineArgs cla, EntityManager em) {
+    private static void randComics(CmdLineArgs cla, EntityManager em) {
         log.info("Generating {} comics records", cla.recNum);
-        for (int i = 0; i < cla.recNum; i++) {
-            //TODO mostrare un progresso ogni tot record generati
+        for (int i = 1; i <= cla.recNum; i++) {
+            // show progress if needed
+            if (cla.recNum > 500) {
+                if (i % 100 == 0) {
+                    log.info(" ... {} ...", i);
+                }
+            }
             // basic attributes
-            Comic c = new Comic(RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(15)), genComicTpe());
+            Comic c = new Comic(RandomStringUtils.randomAscii(5 + rgen.nextInt(15)), genComicTpe());
             c.setPublisher(RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10)));
-            // authors
-            ComicIssue issue = new ComicIssue(rgen.nextInt(1000));
-            issue.getArtBy().add(genAuthor(em));
-            if (rgen.nextDouble() < 0.4) {
-                issue.getTextBy().add(genAuthor(em));
+            c.setType(rgen.nextDouble() < 0.8 ? ComicType.PERIODICAL : ComicType.MONOGRAPH);
+            if (rgen.nextDouble() < 0.33) {
+                c.setGenre(GENRES[rgen.nextInt(GENRES.length)]);
             }
-            if (rgen.nextDouble() < 0.2) {
-                issue.getColoursBy().add(genAuthor(em));
+            // issues
+            for (int j = 1; j <= rgen.nextInt(100); j++) {
+                ComicIssue issue = new ComicIssue(j);
+                issue.setComic(c);
+                issue.getArtBy().add(genAuthor(em));
+                if (rgen.nextDouble() < 0.4) {
+                    issue.getTextBy().add(genAuthor(em));
+                }
+                if (rgen.nextDouble() < 0.2) {
+                    issue.getColoursBy().add(genAuthor(em));
+                }
+                if (rgen.nextDouble() < 0.2) {
+                    issue.getInkBy().add(genAuthor(em));
+                }
+                if (rgen.nextDouble() < 0.1) {
+                    issue.getCoverBy().add(genAuthor(em));
+                }
+                issue.setPrice(BigDecimal.valueOf(20.0 * rgen.nextDouble()));
+                issue.setPages(20 + rgen.nextInt(80));
+                issue.setPublishDate(new Date(System.currentTimeMillis() + rgen.nextInt()));
+                c.getIssues().add(issue);
             }
-            if (rgen.nextDouble() < 0.2) {
-                issue.getInkBy().add(genAuthor(em));
-            }
-            if (rgen.nextDouble() < 0.1) {
-                issue.getCoverBy().add(genAuthor(em));
-            }
-            issue.setPrice(BigDecimal.valueOf(20.0 * rgen.nextDouble()));
-            issue.setComic(c);
-            em.persist(issue);
-            c.getIssues().add(issue);
-            // series
+            // series (and related attributes)
             if (rgen.nextDouble() < 0.7) {
                 c.setSeries(genSeries(em));
+                if (rgen.nextDouble() < 0.2) {
+                    c.setSeriesIssue(rgen.nextInt(999));
+                    if (rgen.nextDouble() < 0.1) {
+                        c.setSubTitle(RandomStringUtils.randomAscii(5 + rgen.nextInt(15)));
+                    }
+                }
             }
             // other
             c.setFrequency(genFreq());
-            //TODO aggiungere altri attributi
+            if (rgen.nextDouble() < 0.4) {
+                String lang = RandomStringUtils.randomAscii(5 + rgen.nextInt(10));
+                c.setLanguage(lang);
+                c.setCountry(lang);
+            }
+            if (rgen.nextDouble() < 0.1) {
+                c.setNotes(RandomStringUtils.randomAscii(15 + rgen.nextInt(20)));
+            }
             em.persist(c);
         }
+        log.info(" ... done");
     }
 
     private static Series genSeries(EntityManager em) {
