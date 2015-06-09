@@ -25,6 +25,7 @@ import java.util.*;
 public class CreateApp {
     public static final Logger log = LoggerFactory.getLogger(CreateApp.class);
     private static final Genre[] GENRES = Genre.class.getEnumConstants();
+    private static final String CHARS = "abcdefgh ijklmnop qrstuvxw yz ABCDEFGH IJKLMNOP QRSTUVWX YZ";
     private static Random rgen = new Random();
     private static List<Author> authCache = new ArrayList<>();
     private static List<Series> seriesCache = new ArrayList<>();
@@ -54,7 +55,7 @@ public class CreateApp {
             log.info("------ Population -------");
             em.getTransaction().begin();
             knownComics(em);
-            randComics(cla, em);
+            generateComics(cla, em);
             em.getTransaction().commit();
             if (cla.xmlExport) {
                 // xml export
@@ -108,7 +109,7 @@ public class CreateApp {
         em.persist(c1);
     }
 
-    private static void randComics(CmdLineArgs cla, EntityManager em) {
+    private static void generateComics(CmdLineArgs cla, EntityManager em) {
         log.info("Generating {} comics records", cla.recNum);
         for (int i = 1; i <= cla.recNum; i++) {
             // show progress if needed
@@ -118,7 +119,7 @@ public class CreateApp {
                 }
             }
             // basic attributes
-            Comic c = new Comic(RandomStringUtils.randomAscii(5 + rgen.nextInt(15)), genComicTpe());
+            Comic c = new Comic(RandomStringUtils.random(5 + rgen.nextInt(15), CHARS), genComicTpe());
             c.setPublisher(RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10)));
             c.setType(rgen.nextDouble() < 0.8 ? ComicType.PERIODICAL : ComicType.MONOGRAPH);
             if (rgen.nextDouble() < 0.33) {
@@ -152,19 +153,19 @@ public class CreateApp {
                 if (rgen.nextDouble() < 0.2) {
                     c.setSeriesIssue(rgen.nextInt(999));
                     if (rgen.nextDouble() < 0.1) {
-                        c.setSubTitle(RandomStringUtils.randomAscii(5 + rgen.nextInt(15)));
+                        c.setSubTitle(RandomStringUtils.random(5 + rgen.nextInt(15), CHARS));
                     }
                 }
             }
             // other
             c.setFrequency(genFreq());
             if (rgen.nextDouble() < 0.4) {
-                String lang = RandomStringUtils.randomAscii(5 + rgen.nextInt(10));
+                String lang = RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10));
                 c.setLanguage(lang);
                 c.setCountry(lang);
             }
             if (rgen.nextDouble() < 0.1) {
-                c.setNotes(RandomStringUtils.randomAscii(15 + rgen.nextInt(20)));
+                c.setNotes(RandomStringUtils.random(15 + rgen.nextInt(20), CHARS));
             }
             em.persist(c);
         }
@@ -176,7 +177,7 @@ public class CreateApp {
             return seriesCache.get(rgen.nextInt(seriesCache.size()));
         } else {
             Series s = new Series();
-            s.setName(RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10)));
+            s.setName(RandomStringUtils.random(5 + rgen.nextInt(10), CHARS));
             em.persist(s);
             seriesCache.add(s);
             return s;
