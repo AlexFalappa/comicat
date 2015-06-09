@@ -17,6 +17,8 @@ public class CmdLineArgs {
     String jdbcUser;
     @Option(name = "p", metaVar = "DB_PASSW", usage = "JDBC database user password")
     String jdbcPassw;
+    @Option(name = "x", usage = "Test export as XML")
+    boolean xmlExport = false;
     @Argument(metaVar = "REC_NUM", usage = "Number of comic record to generate. Default 10.")
     int recNum = 10;
 }

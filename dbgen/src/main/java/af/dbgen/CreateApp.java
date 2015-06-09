@@ -2,13 +2,15 @@ package af.dbgen;
 
 import af.model.*;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -53,27 +55,16 @@ public class CreateApp {
             generateComics(cla, em);
             persistComics(em);
             em.getTransaction().commit();
-            // query db
-            log.info("------ Query -------");
-            TypedQuery<Comic> q = em.createNamedQuery("Comic.findByTitle", Comic.class);
-            q.setParameter("title", "Ringo");
-            Comic result = q.getSingleResult();
-            log.info("Issues: {}", result.getIssues().size());
-            if (!result.getIssues().isEmpty()) {
-                log.info(StringUtils.join(result.getIssues(), ", "));
+            if (cla.xmlExport) {
+                // xml export
+                log.info("------ XML export -------");
+                log.info("All comics:");
+                ComicCollection cc = ComicCollection.fromDbAll(em);
+                xmlMarshal(cc);
+                log.info("Ringo comics:");
+                cc = ComicCollection.fromDbQuery("RingoComics", "select c from Comic c where c.title='Ringo'", em);
+                xmlMarshal(cc);
             }
-            TypedQuery<ComicIssue> q2 = em.createNamedQuery("ComicIssue.findByNumber", ComicIssue.class);
-            q2.setParameter("num", 9);
-            ComicIssue issue = q2.getSingleResult();
-            log.info("Comic of issue 9: {}", issue.getComic().getTitle());
-            // xml export
-            log.info("------ XML export -------");
-            log.info("All comics:");
-            ComicCollection cc = ComicCollection.fromDbAll(em);
-            xmlMarshal(cc);
-            log.info("Ringo comics:");
-            cc = ComicCollection.fromDbQuery("RingoComics", "select c from Comic c where c.title='Ringo'", em);
-            xmlMarshal(cc);
         } catch (PersistenceException | JAXBException pe) {
             pe.printStackTrace();
             System.exit(1);
