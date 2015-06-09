@@ -104,14 +104,12 @@ public class CreateApp {
         issue.setPages(38);
         issue.setPrice(BigDecimal.valueOf(4.5));
         issue.setComic(c1);
-        em.persist(issue);
 
         ComicIssue issue2 = new ComicIssue(10);
         issue2.setPublishDate(new Date());
         issue2.setPages(54);
         issue2.getArtBy().add(a2);
         issue2.setComic(c1);
-        em.persist(issue2);
 
         c1.getIssues().add(issue);
         c1.getIssues().add(issue2);

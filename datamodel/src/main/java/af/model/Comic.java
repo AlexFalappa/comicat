@@ -44,7 +44,7 @@ public class Comic {
     private String language;
     @Lob
     private String notes;
-    @OneToMany(mappedBy = "comic")
+    @OneToMany(mappedBy = "comic", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<ComicIssue> issues = new ArrayList<>();
     @Version
     private Date lastUpdate;
