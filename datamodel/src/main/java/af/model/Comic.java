@@ -44,7 +44,7 @@ public class Comic {
     private String language;
     @Lob
     private String notes;
-    @OneToMany(mappedBy = "comic", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "comic", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<ComicIssue> issues = new ArrayList<>();
     @Version
     private Date lastUpdate;
@@ -164,5 +164,18 @@ public class Comic {
     @Override
     public String toString() {
         return String.format("Comic{%d: %s}", id, title);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comic comic = (Comic) o;
+        return !(title != null ? !title.equals(comic.title) : comic.title != null);
+    }
+
+    @Override
+    public int hashCode() {
+        return title != null ? title.hashCode() : 0;
     }
 }

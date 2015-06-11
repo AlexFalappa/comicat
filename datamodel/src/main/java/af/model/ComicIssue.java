@@ -9,9 +9,11 @@ import java.util.Set;
 
 /**
  * An issue of a Comic.
- * <p>
- * Class annotated for use with JAXB Object-XML mapping and JPA Object-Relational mapping.
- * Created by sasha on 06/06/15.
+ *
+ * <p>Class annotated for use with JAXB Object-XML mapping and JPA Object-Relational mapping.
+ * ComicIssues are persisted and removed in cascade with Comics.</p>
+ *
+ * <p>Created by sasha on 06/06/15.</p>
  */
 @Entity
 @IdClass(ComicIssueKey.class)

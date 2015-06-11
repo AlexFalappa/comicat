@@ -25,4 +25,20 @@ public class ComicIssueKey implements Serializable {
     public int getNumber() {
         return number;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ComicIssueKey that = (ComicIssueKey) o;
+        if (number != that.number) return false;
+        return comic.getTitle().equals(that.comic.getTitle());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = comic.hashCode();
+        result = 31 * result + number;
+        return result;
+    }
 }
