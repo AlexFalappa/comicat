@@ -25,30 +25,47 @@ public class QueryApp {
             // query db
             log.info("------ Query -------");
 
-            TypedQuery<Author> q = em.createNamedQuery("Author.findByName", Author.class);
-            q.setParameter("nm", "Antonio");
-            Author result = q.getSingleResult();
+            TypedQuery<Author> q1 = em.createNamedQuery("Author.findByName", Author.class);
+            q1.setParameter("nm", "Antonio");
+            Author result = q1.getSingleResult();
             log.info("Author of name Antonio: {} {}", result.getName(), result.getSurname());
             log.info("Drawn comics: {}", result.getDrawnComics());
 
             TypedQuery<Comic> q2 = em.createNamedQuery("Comic.findByTitle", Comic.class);
             q2.setParameter("title", "Ringo");
             Comic c = q2.getSingleResult();
-            log.info("Issues of comic titled 'Ringo': {}", c.getIssues().size());
+            log.info("Issues of comic titled 'Ringo' and their authors ({} items)", c.getIssues().size());
             if (!c.getIssues().isEmpty()) {
+                for (ComicIssue ci : c.getIssues()) {
+                    log.info("issue {}:", ci.getNumber());
+                    for (Author a : ci.getArtBy()) {
+                        log.info("   drawn by: {} {}", a.getName(), a.getSurname());
+                    }
+                    for (Author a : ci.getTextBy()) {
+                        log.info("   written by: {} {}", a.getName(), a.getSurname());
+                    }
+                    for (Author a : ci.getInkBy()) {
+                        log.info("   inked by: {} {}", a.getName(), a.getSurname());
+                    }
+                    for (Author a : ci.getColoursBy()) {
+                        log.info("   coloured by: {} {}", a.getName(), a.getSurname());
+                    }
+                    for (Author a : ci.getCoverBy()) {
+                        log.info("   cover by: {} {}", a.getName(), a.getSurname());
+                    }
+                }
                 log.info(StringUtils.join(c.getIssues(), ", "));
             }
-
-            Query q3 = em.createQuery("select min(publishDate),max(publishDate) from ComicIssue");
-            Object[] res = (Object[]) q3.getSingleResult();
-            log.info("Publication date range of all comic issues: {} -> {}", res[0], res[1]);
-
             q2 = em.createQuery("select c from Comic c where c.id between 1 and 10", Comic.class);
             log.info("Issues of comics of id 1..10:");
             for (Comic cmc : q2.getResultList()) {
                 List<Integer> numbers = cmc.getIssues().stream().map(ComicIssue::getNumber).collect(Collectors.toList());
                 log.info("  {}: {}", cmc.getTitle(), numbers);
             }
+
+            Query q3 = em.createQuery("select min(publishDate),max(publishDate) from ComicIssue");
+            Object[] res = (Object[]) q3.getSingleResult();
+            log.info("Publication date range of all comic issues: {} -> {}", res[0], res[1]);
 
         } catch (PersistenceException pe) {
             pe.printStackTrace();

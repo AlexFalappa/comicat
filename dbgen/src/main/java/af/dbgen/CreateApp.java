@@ -79,9 +79,13 @@ public class CreateApp {
     private static void knownComics(EntityManager em) {
         log.info("Persisting 'known' comics");
         Author a1 = new Author("Antonio", "Serra");
-        Author a2 = new Author("Gianni", "Cavazzano");
         em.persist(a1);
+        Author a2 = new Author("Gianni", "Cavazzano");
         em.persist(a2);
+        Author a3 = new Author("Jiro", "Taniguchi");
+        em.persist(a3);
+        Author a4 = new Author("Tiziano", "Sclavi");
+        em.persist(a4);
 
         Comic c1 = new Comic();
         c1.setTitle("Ringo");
@@ -94,6 +98,7 @@ public class CreateApp {
         issue.setPublishDate(new Date());
         issue.getArtBy().add(a1);
         issue.getTextBy().add(a2);
+        issue.getCoverBy().add(a3);
         issue.setPages(38);
         issue.setPrice(BigDecimal.valueOf(4.5));
         issue.setComic(c1);
@@ -101,7 +106,8 @@ public class CreateApp {
         ComicIssue issue2 = new ComicIssue(10);
         issue2.setPublishDate(new Date());
         issue2.setPages(54);
-        issue2.getArtBy().add(a2);
+        issue2.getArtBy().add(a1);
+        issue2.getTextBy().add(a4);
         issue2.setComic(c1);
 
         c1.getIssues().add(issue);
