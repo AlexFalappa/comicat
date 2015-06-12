@@ -21,9 +21,12 @@ import java.util.List;
         @Index(columnList = "title", unique = true),
 })
 @NamedQueries({
-        @NamedQuery(name = "Comic.findByAll", query = "select c from Comic c"),
+        @NamedQuery(name = "Comic.findAll", query = "select c from Comic c"),
         @NamedQuery(name = "Comic.findByTitle", query = "select c from Comic c where c.title=:title"),
-        @NamedQuery(name = "Comic.findBySeries", query = "select c from Comic c where c.series.name=:snm"),
+        @NamedQuery(name = "Comic.findByTitleLike", query = "select c from Comic c where c.title like concat('%',:title,'%')"),
+        @NamedQuery(name = "Comic.findBySeries", query = "select c from Comic c where c.series.name=:serName"),
+        @NamedQuery(name = "Comic.findBySeriesLike", query = "select c from Comic c where c.series.name like concat('%',:serName,'%')"),
+        @NamedQuery(name = "Comic.findByGenre", query = "select c from Comic c where c.genre=:genre"),
 })
 @XmlType(propOrder = {"title", "subTitle", "series", "seriesIssue", "frequency", "publisher", "genre", "country", "language", "notes", "issues"})
 public class Comic {

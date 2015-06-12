@@ -21,7 +21,8 @@ import java.util.Set;
         @Index(columnList = "publishdate")
 })
 @NamedQueries({
-        @NamedQuery(name = "ComicIssue.findByNumber", query = "select i from ComicIssue i where i.number=:num"),
+        @NamedQuery(name = "ComicIssue.findByComic", query = "select i from ComicIssue i where i.comic.id=:comicId"),
+        @NamedQuery(name = "ComicIssue.findByComicAndNumber", query = "select i from ComicIssue i where i.comic.id=:comicId and i.number=:num"),
         @NamedQuery(name = "ComicIssue.findByDate", query = "select i from ComicIssue i where i.publishDate=:pubDate"),
 })
 @XmlType(propOrder = {"number", "publishDate", "pages", "price", "artBy", "textBy", "coverBy", "inkBy", "coloursBy"})
