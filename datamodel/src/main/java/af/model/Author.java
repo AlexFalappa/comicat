@@ -13,6 +13,7 @@ import java.util.Collection;
         @Index(columnList = "name,surname", unique = true),
 })
 @NamedQueries({
+        @NamedQuery(name = "Author.findAll", query = "select a from Author a"),
         @NamedQuery(name = "Author.findByName", query = "select a from Author a where a.name=:nm"),
         @NamedQuery(name = "Author.findBySurname", query = "select a from Author a where a.surname=:surnm"),
         @NamedQuery(name = "Author.findByNameSurname", query = "select a from Author a where a.name=:nm and a.surname=:surnm")
