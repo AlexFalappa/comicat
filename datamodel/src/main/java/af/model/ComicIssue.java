@@ -51,6 +51,8 @@ public class ComicIssue {
     private Set<Author> inkBy = new HashSet<>(4);
     private Integer pages;
     private BigDecimal price;
+    @Column(length = 500)
+    private String location;
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] cover;
@@ -154,6 +156,26 @@ public class ComicIssue {
 
     public void setComic(Comic comic) {
         this.comic = comic;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public byte[] getCover() {
+        return cover;
+    }
+
+    public void setCover(byte[] cover) {
+        this.cover = cover;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
     }
 
     @Override
