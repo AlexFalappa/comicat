@@ -5,9 +5,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * A comic issue.
@@ -47,6 +45,18 @@ public class Comic {
     private String language;
     @Lob
     private String notes;
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "comic_art_author")
+    private Set<Author> artBy = new HashSet<>(4);
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "comic_text_author")
+    private Set<Author> textBy = new HashSet<>(4);
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "comic_colours_author")
+    private Set<Author> coloursBy = new HashSet<>(4);
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "comic_ink_author")
+    private Set<Author> inkBy = new HashSet<>(4);
     @OneToMany(mappedBy = "comic", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<ComicIssue> issues = new ArrayList<>();
     @Version
@@ -162,6 +172,38 @@ public class Comic {
     @XmlAttribute
     public long getId() {
         return id;
+    }
+
+    public Set<Author> getArtBy() {
+        return artBy;
+    }
+
+    public void setArtBy(Set<Author> artBy) {
+        this.artBy = artBy;
+    }
+
+    public Set<Author> getTextBy() {
+        return textBy;
+    }
+
+    public void setTextBy(Set<Author> textBy) {
+        this.textBy = textBy;
+    }
+
+    public Set<Author> getColoursBy() {
+        return coloursBy;
+    }
+
+    public void setColoursBy(Set<Author> coloursBy) {
+        this.coloursBy = coloursBy;
+    }
+
+    public Set<Author> getInkBy() {
+        return inkBy;
+    }
+
+    public void setInkBy(Set<Author> inkBy) {
+        this.inkBy = inkBy;
     }
 
     @Override

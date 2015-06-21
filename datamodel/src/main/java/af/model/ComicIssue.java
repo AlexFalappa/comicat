@@ -55,7 +55,10 @@ public class ComicIssue {
     private String location;
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    private byte[] cover;
+    private byte[] coverFull;
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] coverThumb;
     @Version
     private Date lastUpdate;
 
@@ -166,12 +169,20 @@ public class ComicIssue {
         this.location = location;
     }
 
-    public byte[] getCover() {
-        return cover;
+    public byte[] getCoverFull() {
+        return coverFull;
     }
 
-    public void setCover(byte[] cover) {
-        this.cover = cover;
+    public void setCoverFull(byte[] cover) {
+        this.coverFull = cover;
+    }
+
+    public byte[] getCoverThumb() {
+        return coverThumb;
+    }
+
+    public void setCoverThumb(byte[] coverThumb) {
+        this.coverThumb = coverThumb;
     }
 
     public Date getLastUpdate() {
