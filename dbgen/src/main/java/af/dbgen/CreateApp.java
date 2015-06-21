@@ -55,7 +55,7 @@ public class CreateApp {
             log.info("------ Population -------");
             em.getTransaction().begin();
             knownComics(em);
-            generateComics(cla, em);
+            randomComics(cla, em);
             em.getTransaction().commit();
             if (cla.xmlExport) {
                 // xml export
@@ -78,36 +78,38 @@ public class CreateApp {
 
     private static void knownComics(EntityManager em) {
         log.info("Persisting 'known' comics");
-        Author a1 = new Author("Antonio", "Serra");
-        em.persist(a1);
-        Author a2 = new Author("Gianni", "Cavazzano");
-        em.persist(a2);
-        Author a3 = new Author("Jiro", "Taniguchi");
-        em.persist(a3);
-        Author a4 = new Author("Tiziano", "Sclavi");
-        em.persist(a4);
+        Calendar cal = new GregorianCalendar();
 
         Comic c1 = new Comic();
-        c1.setTitle("Ringo");
+        c1.setTitle("Orfani: Ringo");
         c1.setType(ComicType.PERIODICAL);
         c1.setFrequency(Frequency.MONTHLY);
         c1.setGenre(Genre.SCIENCE_FICTION);
-        c1.setPublisher("Bonelli");
+        c1.setPublisher("Sergio Bonelli Editore");
 
-        ComicIssue issue = new ComicIssue(9);
-        issue.setPublishDate(new Date());
-        issue.getArtBy().add(a1);
-        issue.getTextBy().add(a2);
-        issue.getCoverBy().add(a3);
-        issue.setPages(38);
+        ComicIssue issue = new ComicIssue(6);
+        cal.set(2015, Calendar.MARCH, 1);
+        issue.setPages(98);
         issue.setPrice(BigDecimal.valueOf(4.5));
+        issue.setPublishDate(cal.getTime());
+        issue.getArtBy().add(new Author("Alessio", "Avallone"));
+        Author mu = new Author("Mauro", "Uzzeo");
+        issue.getTextBy().add(mu);
+        Author ema = new Author("Emiliano", "Mammuccari");
+        issue.getCoverBy().add(ema);
+        issue.getColoursBy().add(new Author("Nicola", "Righi"));
         issue.setComic(c1);
 
-        ComicIssue issue2 = new ComicIssue(10);
-        issue2.setPublishDate(new Date());
-        issue2.setPages(54);
-        issue2.getArtBy().add(a1);
-        issue2.getTextBy().add(a4);
+        ComicIssue issue2 = new ComicIssue(9);
+        cal.set(2015, Calendar.JUNE, 1);
+        issue2.setPublishDate(cal.getTime());
+        issue2.setPages(98);
+        issue2.setPrice(BigDecimal.valueOf(4.5));
+        issue2.getArtBy().add(new Author("Matteo", "Cremona"));
+        issue2.getTextBy().add(mu);
+        issue2.getCoverBy().add(ema);
+        issue2.getColoursBy().add(new Author("Giovanna", "Niro"));
+        issue2.getColoursBy().add(new Author("Fabiola", "Ienne"));
         issue2.setComic(c1);
 
         c1.getIssues().add(issue);
@@ -115,8 +117,9 @@ public class CreateApp {
         em.persist(c1);
     }
 
-    private static void generateComics(CmdLineArgs cla, EntityManager em) {
+    private static void randomComics(CmdLineArgs cla, EntityManager em) {
         log.info("Generating {} comics records", cla.recNum);
+        boolean authorsOnIssues;
         for (int i = 1; i <= cla.recNum; i++) {
             // show progress if needed
             if (cla.recNum > 500) {
@@ -128,36 +131,55 @@ public class CreateApp {
             Comic c = new Comic(RandomStringUtils.random(5 + rgen.nextInt(15), CHARS), genComicTpe());
             c.setPublisher(RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10)));
             c.setType(rgen.nextDouble() < 0.8 ? ComicType.PERIODICAL : ComicType.MONOGRAPH);
+            // genre for 1/3 of comics
             if (rgen.nextDouble() < 0.33) {
                 c.setGenre(GENRES[rgen.nextInt(GENRES.length)]);
+            }
+            // authors linked to issues instead of comic only for 20% of comics
+            authorsOnIssues = rgen.nextDouble() < 0.2;
+            if (!authorsOnIssues) {
+                c.getArtBy().add(genAuthor(em));
+                if (rgen.nextDouble() < 0.3) {
+                    c.getTextBy().add(genAuthor(em));
+                }
+                if (rgen.nextDouble() < 0.1) {
+                    c.getColoursBy().add(genAuthor(em));
+                }
+                if (rgen.nextDouble() < 0.05) {
+                    c.getInkBy().add(genAuthor(em));
+                }
             }
             // issues
             for (int j = 1; j <= rgen.nextInt(100); j++) {
                 ComicIssue issue = new ComicIssue(j);
                 issue.setComic(c);
-                issue.getArtBy().add(genAuthor(em));
-                if (rgen.nextDouble() < 0.4) {
-                    issue.getTextBy().add(genAuthor(em));
-                }
-                if (rgen.nextDouble() < 0.2) {
-                    issue.getColoursBy().add(genAuthor(em));
-                }
-                if (rgen.nextDouble() < 0.2) {
-                    issue.getInkBy().add(genAuthor(em));
-                }
-                if (rgen.nextDouble() < 0.1) {
-                    issue.getCoverBy().add(genAuthor(em));
+                if (authorsOnIssues) {
+                    issue.getArtBy().add(genAuthor(em));
+                    if (rgen.nextDouble() < 0.4) {
+                        issue.getTextBy().add(genAuthor(em));
+                    }
+                    if (rgen.nextDouble() < 0.2) {
+                        issue.getColoursBy().add(genAuthor(em));
+                    }
+                    if (rgen.nextDouble() < 0.2) {
+                        issue.getInkBy().add(genAuthor(em));
+                    }
+                    if (rgen.nextDouble() < 0.1) {
+                        issue.getCoverBy().add(genAuthor(em));
+                    }
                 }
                 issue.setPrice(BigDecimal.valueOf(20.0 * rgen.nextDouble()));
                 issue.setPages(20 + rgen.nextInt(80));
                 issue.setPublishDate(new Date(System.currentTimeMillis() + rgen.nextInt()));
                 c.getIssues().add(issue);
             }
-            // series (and related attributes)
+            // series for 70% of comics
             if (rgen.nextDouble() < 0.7) {
                 c.setSeries(genSeries(em));
+                // number in series only for 20%
                 if (rgen.nextDouble() < 0.2) {
                     c.setSeriesIssue(rgen.nextInt(999));
+                    // subtitle only for 10%
                     if (rgen.nextDouble() < 0.1) {
                         c.setSubTitle(RandomStringUtils.random(5 + rgen.nextInt(15), CHARS));
                     }
@@ -166,11 +188,13 @@ public class CreateApp {
             // other
             c.setFrequency(genFreq());
             if (rgen.nextDouble() < 0.4) {
+                // language for 40% of comics
                 String lang = RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10));
                 c.setLanguage(lang);
                 c.setCountry(lang);
             }
             if (rgen.nextDouble() < 0.1) {
+                // notes for 10%
                 c.setNotes(RandomStringUtils.random(15 + rgen.nextInt(20), CHARS));
             }
             em.persist(c);
