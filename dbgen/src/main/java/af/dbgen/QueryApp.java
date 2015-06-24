@@ -1,13 +1,12 @@
 package af.dbgen;
 
-import af.model.Author;
-import af.model.Comic;
-import af.model.ComicIssue;
+import af.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,18 +22,18 @@ public class QueryApp {
         EntityManager em = emf.createEntityManager();
         try {
             // query db
-            log.info("------ Query -------");
+            log.info("------ JPQL Queries -------");
 
             TypedQuery<Author> q1 = em.createNamedQuery("Author.findByName", Author.class);
-            q1.setParameter("nm", "Antonio");
+            q1.setParameter("nm", "Alessio");
             Author result = q1.getSingleResult();
-            log.info("Author of name Antonio: {} {}", result.getName(), result.getSurname());
+            log.info("Author of name Alessio: {} {}", result.getName(), result.getSurname());
             log.info("Drawn comics: {}", result.getDrawnComics());
 
             TypedQuery<Comic> q2 = em.createNamedQuery("Comic.findByTitle", Comic.class);
-            q2.setParameter("title", "Ringo");
+            q2.setParameter("title", "Orfani: Ringo");
             Comic c = q2.getSingleResult();
-            log.info("Issues of comic titled 'Ringo' and their authors ({} items)", c.getIssues().size());
+            log.info("Issues of comic titled 'Orfani: Ringo' and their authors ({} items)", c.getIssues().size());
             if (!c.getIssues().isEmpty()) {
                 for (ComicIssue ci : c.getIssues()) {
                     log.info("issue {}:", ci.getNumber());
@@ -66,6 +65,25 @@ public class QueryApp {
             Query q3 = em.createQuery("select min(publishDate),max(publishDate) from ComicIssue");
             Object[] res = (Object[]) q3.getSingleResult();
             log.info("Publication date range of all comic issues: {} -> {}", res[0], res[1]);
+
+            log.info("------ Criteria API Queries -------");
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+
+            CriteriaQuery<Comic> q4 = cb.createQuery(Comic.class);
+            Root<Comic> rq = q4.from(Comic.class);
+            Predicate cl1 = rq.get(Comic_.series).isNotNull();
+            Predicate cl2 = rq.get(Comic_.language).isNotNull();
+            q4.select(rq).where(cb.and(cl1, cl2));
+            TypedQuery<Comic> q = em.createQuery(q4);
+            log.info("Comics with a language and a series: {}", q.getResultList());
+
+            CriteriaQuery q5 = cb.createQuery();
+            Root<Comic> rq2 = q5.from(Comic.class);
+            ListJoin<Comic, ComicIssue> join = rq2.join(Comic_.issues);
+            Predicate ge = cb.ge(join.get(ComicIssue_.number), 10);
+            q5.select(rq).where(ge);
+            TypedQuery tq = em.createQuery(q5);
+            log.info("Comics with more than 10 number: {}", tq.getResultList());
 
         } catch (PersistenceException pe) {
             pe.printStackTrace();
