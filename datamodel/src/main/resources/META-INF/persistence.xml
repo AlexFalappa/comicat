@@ -4,7 +4,7 @@
     <persistence-unit name="pu.comic" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:file:/home/sasha/test"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:file:~/test"/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <!--<property name="javax.persistence.jdbc.user" value=""/>-->
             <!--<property name="javax.persistence.jdbc.password" value=""/>-->
