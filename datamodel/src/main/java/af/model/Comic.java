@@ -1,11 +1,32 @@
 package af.model;
 
-import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
-import java.util.*;
 
 /**
  * A comic issue.
@@ -16,18 +37,19 @@ import java.util.*;
  */
 @Entity
 @Table(indexes = {
-        @Index(columnList = "title", unique = true),
+    @Index(columnList = "title", unique = true)
 })
 @NamedQueries({
-        @NamedQuery(name = "Comic.findAll", query = "select c from Comic c"),
-        @NamedQuery(name = "Comic.findByTitle", query = "select c from Comic c where c.title=:title"),
-        @NamedQuery(name = "Comic.findByTitleLike", query = "select c from Comic c where c.title like concat('%',:title,'%')"),
-        @NamedQuery(name = "Comic.findBySeries", query = "select c from Comic c where c.series.name=:serName"),
-        @NamedQuery(name = "Comic.findBySeriesLike", query = "select c from Comic c where c.series.name like concat('%',:serName,'%')"),
-        @NamedQuery(name = "Comic.findByGenre", query = "select c from Comic c where c.genre=:genre"),
+    @NamedQuery(name = "Comic.findAll", query = "select c from Comic c"),
+    @NamedQuery(name = "Comic.findByTitle", query = "select c from Comic c where c.title=:title"),
+    @NamedQuery(name = "Comic.findByTitleLike", query = "select c from Comic c where c.title like concat('%',:title,'%')"),
+    @NamedQuery(name = "Comic.findBySeries", query = "select c from Comic c where c.series.name=:serName"),
+    @NamedQuery(name = "Comic.findBySeriesLike", query = "select c from Comic c where c.series.name like concat('%',:serName,'%')"),
+    @NamedQuery(name = "Comic.findByGenre", query = "select c from Comic c where c.genre=:genre")
 })
 @XmlType(propOrder = {"title", "subTitle", "series", "seriesIssue", "frequency", "publisher", "genre", "country", "language", "notes", "issues"})
 public class Comic {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -42,7 +64,7 @@ public class Comic {
     @Enumerated(EnumType.STRING)
     private Genre genre;
     private String country;
-    private String language;
+    private String lang;
     @Lob
     private String notes;
     @ManyToMany(cascade = CascadeType.PERSIST)
@@ -60,7 +82,7 @@ public class Comic {
     @OneToMany(mappedBy = "comic", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<ComicIssue> issues = new ArrayList<>();
     @Version
-    private Date lastUpdate;
+    private Timestamp lastUpdate;
 
     public Comic() {
     }
@@ -88,12 +110,12 @@ public class Comic {
         this.notes = notes;
     }
 
-    public String getLanguage() {
-        return language;
+    public String getLang() {
+        return lang;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 
     public String getCountry() {
@@ -206,6 +228,10 @@ public class Comic {
         this.inkBy = inkBy;
     }
 
+    public Timestamp getLastUpdate() {
+        return lastUpdate;
+    }
+
     @Override
     public String toString() {
         return String.format("Comic{%d: %s}", id, title);
@@ -213,8 +239,12 @@ public class Comic {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Comic comic = (Comic) o;
         return !(title != null ? !title.equals(comic.title) : comic.title != null);
     }

@@ -1,32 +1,57 @@
 package af.model;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.*;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Index;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  * An issue of a Comic.
  *
- * <p>Class annotated for use with JAXB Object-XML mapping and JPA Object-Relational mapping.
- * ComicIssues are persisted and removed in cascade with Comics.</p>
+ * <p>
+ * Class annotated for use with JAXB Object-XML mapping and JPA Object-Relational mapping. ComicIssues are persisted and removed in cascade
+ * with Comics.</p>
  *
- * <p>Created by sasha on 06/06/15.</p>
+ * <p>
+ * Created by sasha on 06/06/15.</p>
  */
 @Entity
 @IdClass(ComicIssueKey.class)
 @Table(indexes = {
-        @Index(columnList = "publishdate")
+    @Index(columnList = "publishdate")
 })
 @NamedQueries({
-        @NamedQuery(name = "ComicIssue.findByComic", query = "select i from ComicIssue i where i.comic.id=:comicId"),
-        @NamedQuery(name = "ComicIssue.findByComicAndNumber", query = "select i from ComicIssue i where i.comic.id=:comicId and i.number=:num"),
-        @NamedQuery(name = "ComicIssue.findByDate", query = "select i from ComicIssue i where i.publishDate=:pubDate"),
+    @NamedQuery(name = "ComicIssue.findByComic", query = "select i from ComicIssue i where i.comic.id=:comicId"),
+    @NamedQuery(name = "ComicIssue.findByComicAndNumber", query = "select i from ComicIssue i where i.comic.id=:comicId and i.number=:num"),
+    @NamedQuery(name = "ComicIssue.findByDate", query = "select i from ComicIssue i where i.publishDate=:pubDate")
 })
 @XmlType(propOrder = {"number", "publishDate", "pages", "price", "artBy", "textBy", "coverBy", "inkBy", "coloursBy"})
 public class ComicIssue {
+
     @Id
     @ManyToOne
     private Comic comic;
@@ -60,7 +85,7 @@ public class ComicIssue {
     @Basic(fetch = FetchType.LAZY)
     private byte[] coverThumb;
     @Version
-    private Date lastUpdate;
+    private Timestamp lastUpdate;
 
     public ComicIssue() {
     }
@@ -185,7 +210,7 @@ public class ComicIssue {
         this.coverThumb = coverThumb;
     }
 
-    public Date getLastUpdate() {
+    public Timestamp getLastUpdate() {
         return lastUpdate;
     }
 
