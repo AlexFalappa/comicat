@@ -18,7 +18,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,7 @@ public class QueryApp {
             TypedQuery<Author> q1 = em.createNamedQuery("Author.findByName", Author.class);
             q1.setParameter("nm", "Alessio");
             Author result = q1.getSingleResult();
-            log.info("Author of name Alessio: {} {}", result.getName(), result.getSurname());
+            log.info("Author of name Alessio: {}", result.getNameSurname());
             log.info("Drawn comics: {}", result.getDrawnComics());
 
             TypedQuery<Comic> q2 = em.createNamedQuery("Comic.findByTitle", Comic.class);
@@ -49,23 +48,15 @@ public class QueryApp {
             if (!c.getIssues().isEmpty()) {
                 for (ComicIssue ci : c.getIssues()) {
                     log.info("issue {}:", ci.getNumber());
-                    for (Author a : ci.getArtBy()) {
-                        log.info("   drawn by: {} {}", a.getName(), a.getSurname());
-                    }
-                    for (Author a : ci.getTextBy()) {
-                        log.info("   written by: {} {}", a.getName(), a.getSurname());
-                    }
-                    for (Author a : ci.getInkBy()) {
-                        log.info("   inked by: {} {}", a.getName(), a.getSurname());
-                    }
-                    for (Author a : ci.getColoursBy()) {
-                        log.info("   coloured by: {} {}", a.getName(), a.getSurname());
-                    }
-                    for (Author a : ci.getCoverBy()) {
-                        log.info("   cover by: {} {}", a.getName(), a.getSurname());
-                    }
+                    ci.getArtBy().forEach((a) -> log.info("   drawn by: {}", a.getNameSurname()));
+                    ci.getTextBy().forEach((a) -> log.info("   written by: {}", a.getNameSurname()));
+                    ci.getInkBy().forEach((a) -> log.info("   inked by: {}", a.getNameSurname()));
+                    ci.getColoursBy().forEach((a) -> log.info("   coloured by: {}", a.getNameSurname()));
+                    ci.getCoverBy().forEach((a) -> log.info("   cover by: {}", a.getNameSurname()));
                 }
-                log.info(StringUtils.join(c.getIssues(), ", "));
+                log.info(c.getIssues().stream()
+                        .map(Object::toString)
+                        .collect(Collectors.joining(", ")));
             }
             q2 = em.createQuery("select c from Comic c where c.id between 1 and 10", Comic.class);
             log.info("Issues of comics of id 1..10:");

@@ -1,24 +1,31 @@
 package af.model;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAttribute;
 import java.util.Collection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
- * A comic author.
- * Created by sasha on 23/05/15.
+ * A comic author. Created by sasha on 23/05/15.
  */
 @Entity
 @Table(indexes = {
-        @Index(columnList = "name,surname", unique = true),
-})
+    @Index(columnList = "name,surname", unique = true),})
 @NamedQueries({
-        @NamedQuery(name = "Author.findAll", query = "select a from Author a"),
-        @NamedQuery(name = "Author.findByName", query = "select a from Author a where a.name=:nm"),
-        @NamedQuery(name = "Author.findBySurname", query = "select a from Author a where a.surname=:surnm"),
-        @NamedQuery(name = "Author.findByNameSurname", query = "select a from Author a where a.name=:nm and a.surname=:surnm")
+    @NamedQuery(name = "Author.findAll", query = "select a from Author a"),
+    @NamedQuery(name = "Author.findByName", query = "select a from Author a where a.name=:nm"),
+    @NamedQuery(name = "Author.findBySurname", query = "select a from Author a where a.surname=:surnm"),
+    @NamedQuery(name = "Author.findByNameSurname", query = "select a from Author a where a.name=:nm and a.surname=:surnm")
 })
 public class Author {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -46,6 +53,10 @@ public class Author {
     @XmlAttribute
     public long getId() {
         return id;
+    }
+
+    public String getNameSurname() {
+        return name + " " + surname;
     }
 
     public String getName() {
