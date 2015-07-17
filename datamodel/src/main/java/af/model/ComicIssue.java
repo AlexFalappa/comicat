@@ -57,6 +57,7 @@ public class ComicIssue {
     private Comic comic;
     @Id
     private int number;
+    private Integer seriesNumber;
     @Temporal(TemporalType.DATE)
     private Date publishDate;
     @ManyToMany(cascade = CascadeType.PERSIST)
@@ -175,6 +176,14 @@ public class ComicIssue {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public Integer getSeriesNumber() {
+        return seriesNumber;
+    }
+
+    public void setSeriesNumber(Integer seriesNumber) {
+        this.seriesNumber = seriesNumber;
     }
 
     @XmlTransient

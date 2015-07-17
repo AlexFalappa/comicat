@@ -57,7 +57,6 @@ public class Comic {
     private String publisher;
     @OneToOne()
     private Series series;
-    private Integer seriesIssue;
     private String title;
     private String subTitle;
     private Frequency frequency;
@@ -156,14 +155,6 @@ public class Comic {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Integer getSeriesIssue() {
-        return seriesIssue;
-    }
-
-    public void setSeriesIssue(Integer seriesIssue) {
-        this.seriesIssue = seriesIssue;
     }
 
     public Series getSeries() {
