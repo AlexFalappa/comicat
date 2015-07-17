@@ -58,7 +58,6 @@ public class Comic {
     @OneToOne()
     private Series series;
     private String title;
-    private String subTitle;
     private Frequency frequency;
     @Enumerated(EnumType.STRING)
     private Genre genre;
@@ -139,14 +138,6 @@ public class Comic {
 
     public void setFrequency(Frequency frequency) {
         this.frequency = frequency;
-    }
-
-    public String getSubTitle() {
-        return subTitle;
-    }
-
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
     }
 
     public String getTitle() {
