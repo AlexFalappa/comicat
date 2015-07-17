@@ -1,20 +1,32 @@
 package af.dbgen;
 
-import af.model.*;
+import af.model.Author;
+import af.model.Comic;
+import af.model.ComicIssue;
+import af.model.ComicIssue_;
+import af.model.Comic_;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ListJoin;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
-import javax.persistence.criteria.*;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
- * Query test application.
- * Created by sasha on 07/06/15.
+ * Query test application. Created by sasha on 07/06/15.
  */
 public class QueryApp {
+
     public static final Logger log = LoggerFactory.getLogger(QueryApp.class);
 
     public static void main(String[] args) {
@@ -72,7 +84,7 @@ public class QueryApp {
             CriteriaQuery<Comic> q4 = cb.createQuery(Comic.class);
             Root<Comic> rq = q4.from(Comic.class);
             Predicate cl1 = rq.get(Comic_.series).isNotNull();
-            Predicate cl2 = rq.get(Comic_.language).isNotNull();
+            Predicate cl2 = rq.get(Comic_.lang).isNotNull();
             q4.select(rq).where(cb.and(cl1, cl2));
             TypedQuery<Comic> q = em.createQuery(q4);
             log.info("Comics with a language and a series: {}", q.getResultList());

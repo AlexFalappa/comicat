@@ -1,12 +1,22 @@
 package af.dbgen;
 
-import af.model.*;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import af.model.Author;
+import af.model.Comic;
+import af.model.ComicCollection;
+import af.model.ComicIssue;
+import af.model.ComicType;
+import af.model.Frequency;
+import af.model.Genre;
+import af.model.Series;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -14,8 +24,11 @@ import javax.persistence.PersistenceException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.math.BigDecimal;
-import java.util.*;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Generator of dummy comics.
@@ -23,6 +36,7 @@ import java.util.*;
  * Created by sasha on 01/06/15.
  */
 public class CreateApp {
+
     public static final Logger log = LoggerFactory.getLogger(CreateApp.class);
     private static final Genre[] GENRES = Genre.class.getEnumConstants();
     private static final String CHARS = "abcdefgh ijklmnop qrstuvxw yz ABCDEFGH IJKLMNOP QRSTUVWX YZ";
@@ -149,6 +163,10 @@ public class CreateApp {
                     c.getInkBy().add(genAuthor(em));
                 }
             }
+            // series for 70% of comics
+            if (rgen.nextDouble() < 0.7) {
+                c.setSeries(genSeries(em));
+            }
             // issues
             for (int j = 1; j <= rgen.nextInt(100); j++) {
                 ComicIssue issue = new ComicIssue(j);
@@ -171,26 +189,22 @@ public class CreateApp {
                 issue.setPrice(BigDecimal.valueOf(20.0 * rgen.nextDouble()));
                 issue.setPages(20 + rgen.nextInt(80));
                 issue.setPublishDate(new Date(System.currentTimeMillis() + rgen.nextInt()));
-                c.getIssues().add(issue);
-            }
-            // series for 70% of comics
-            if (rgen.nextDouble() < 0.7) {
-                c.setSeries(genSeries(em));
                 // number in series only for 20%
-                if (rgen.nextDouble() < 0.2) {
-                    c.setSeriesIssue(rgen.nextInt(999));
+                if (c.getSeries() != null && rgen.nextDouble() < 0.2) {
+                    issue.setSeriesNumber(rgen.nextInt(999));
                     // subtitle only for 10%
                     if (rgen.nextDouble() < 0.1) {
-                        c.setSubTitle(RandomStringUtils.random(5 + rgen.nextInt(15), CHARS));
+                        issue.setSubTitle(RandomStringUtils.random(5 + rgen.nextInt(15), CHARS));
                     }
                 }
+                c.getIssues().add(issue);
             }
             // other
             c.setFrequency(genFreq());
             if (rgen.nextDouble() < 0.4) {
                 // language for 40% of comics
                 String lang = RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10));
-                c.setLanguage(lang);
+                c.setLang(lang);
                 c.setCountry(lang);
             }
             if (rgen.nextDouble() < 0.1) {
@@ -222,7 +236,8 @@ public class CreateApp {
         if (rgen.nextDouble() < 0.7 && !authCache.isEmpty()) {
             return authCache.get(rgen.nextInt(authCache.size()));
         } else {
-            Author a = new Author(RandomStringUtils.randomAlphabetic(3 + rgen.nextInt(7)), RandomStringUtils.randomAlphabetic(5 + rgen.nextInt(10)));
+            Author a = new Author(RandomStringUtils.randomAlphabetic(3 + rgen.nextInt(7)), RandomStringUtils.randomAlphabetic(5 + rgen
+                    .nextInt(10)));
             em.persist(a);
             authCache.add(a);
             return a;
