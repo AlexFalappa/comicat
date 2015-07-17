@@ -29,19 +29,10 @@ public class AdvancedSearchPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cbField = new javax.swing.JComboBox();
-        cbOp = new javax.swing.JComboBox();
-        ftxValue = new javax.swing.JFormattedTextField();
         bRemove = new javax.swing.JButton();
         bAdd = new javax.swing.JButton();
         scroller = new javax.swing.JScrollPane();
         lExpressions = new javax.swing.JList();
-
-        cbField.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Title", "Subtitle", "Publisher", "Series", "Issue", "Drawings by", "Texts by", "Cover by" }));
-
-        cbOp.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "=", ">", ">=", "<", "<=", "contains", " " }));
-
-        ftxValue.setColumns(10);
 
         bRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/af/uiswing/ui/images_16x16/glyphicons_433_minus.png"))); // NOI18N
         bRemove.setEnabled(false);
@@ -54,7 +45,7 @@ public class AdvancedSearchPanel extends javax.swing.JPanel {
             public Object getElementAt(int i) { return strings[i]; }
         });
         lExpressions.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        lExpressions.setVisibleRowCount(4);
+        lExpressions.setVisibleRowCount(2);
         lExpressions.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lExpressionsValueChanged(evt);
@@ -66,36 +57,24 @@ public class AdvancedSearchPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scroller)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(cbField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbOp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ftxValue)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bAdd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bRemove)))
-                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(bRemove, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bAdd, javax.swing.GroupLayout.Alignment.LEADING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scroller))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(cbOp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(ftxValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(bAdd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bRemove)
-                        .addComponent(bAdd)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scroller)
-                .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(scroller))
+                .addGap(0, 0, 0))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -106,9 +85,6 @@ public class AdvancedSearchPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bAdd;
     private javax.swing.JButton bRemove;
-    private javax.swing.JComboBox cbField;
-    private javax.swing.JComboBox cbOp;
-    private javax.swing.JFormattedTextField ftxValue;
     private javax.swing.JList lExpressions;
     private javax.swing.JScrollPane scroller;
     // End of variables declaration//GEN-END:variables

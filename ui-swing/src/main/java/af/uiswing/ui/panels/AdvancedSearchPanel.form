@@ -16,83 +16,34 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="scroller" max="32767" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <Component id="cbField" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cbOp" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="ftxValue" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="bAdd" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="bRemove" min="-2" max="-2" attributes="0"/>
-                  </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="bRemove" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="bAdd" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="scroller" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="cbField" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="cbOp" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxValue" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="bRemove" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="bAdd" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="bAdd" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="bRemove" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
+                  <Component id="scroller" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="scroller" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JComboBox" name="cbField">
-      <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="8">
-            <StringItem index="0" value="Title"/>
-            <StringItem index="1" value="Subtitle"/>
-            <StringItem index="2" value="Publisher"/>
-            <StringItem index="3" value="Series"/>
-            <StringItem index="4" value="Issue"/>
-            <StringItem index="5" value="Drawings by"/>
-            <StringItem index="6" value="Texts by"/>
-            <StringItem index="7" value="Cover by"/>
-          </StringArray>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JComboBox" name="cbOp">
-      <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="7">
-            <StringItem index="0" value="="/>
-            <StringItem index="1" value="&gt;"/>
-            <StringItem index="2" value="&gt;="/>
-            <StringItem index="3" value="&lt;"/>
-            <StringItem index="4" value="&lt;="/>
-            <StringItem index="5" value="contains"/>
-            <StringItem index="6" value=" "/>
-          </StringArray>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JFormattedTextField" name="ftxValue">
-      <Properties>
-        <Property name="columns" type="int" value="10"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JButton" name="bRemove">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -124,7 +75,7 @@
               </StringArray>
             </Property>
             <Property name="selectionMode" type="int" value="0"/>
-            <Property name="visibleRowCount" type="int" value="4"/>
+            <Property name="visibleRowCount" type="int" value="2"/>
           </Properties>
           <Events>
             <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="lExpressionsValueChanged"/>
