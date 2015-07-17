@@ -16,6 +16,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="New Comic"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="miNewActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="sep1">
             </MenuItem>
@@ -53,6 +56,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="miSettings">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+S"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Settings"/>
               </Properties>
             </MenuItem>
@@ -104,14 +110,12 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="scroller" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="scroller" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="pSearch" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="bSearch" linkSize="1" min="-2" max="-2" attributes="0"/>
                           <Component id="bClear" linkSize="1" min="-2" max="-2" attributes="0"/>
@@ -125,17 +129,17 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="bClear" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="bSearch" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="pSearch" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="pSearch" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="scroller" pref="207" max="32767" attributes="0"/>
+              <Component id="scroller" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
