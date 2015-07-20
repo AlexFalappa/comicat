@@ -1,5 +1,6 @@
 package af.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -50,7 +51,7 @@ import javax.xml.bind.annotation.XmlType;
     @NamedQuery(name = "ComicIssue.findByDate", query = "select i from ComicIssue i where i.publishDate=:pubDate")
 })
 @XmlType(propOrder = {"number", "publishDate", "pages", "price", "artBy", "textBy", "coverBy", "inkBy", "coloursBy"})
-public class ComicIssue {
+public class ComicIssue implements Serializable {
 
     @Id
     @ManyToOne

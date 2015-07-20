@@ -1,5 +1,6 @@
 package af.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,7 +49,7 @@ import javax.xml.bind.annotation.XmlType;
     @NamedQuery(name = "Comic.findByGenre", query = "select c from Comic c where c.genre=:genre")
 })
 @XmlType(propOrder = {"title", "subTitle", "series", "seriesIssue", "frequency", "publisher", "genre", "country", "language", "notes", "issues"})
-public class Comic {
+public class Comic implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

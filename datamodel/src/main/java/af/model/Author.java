@@ -1,5 +1,6 @@
 package af.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ import javax.xml.bind.annotation.XmlAttribute;
     @NamedQuery(name = "Author.findBySurname", query = "select a from Author a where a.surname=:surnm"),
     @NamedQuery(name = "Author.findByNameSurname", query = "select a from Author a where a.name=:nm and a.surname=:surnm")
 })
-public class Author {
+public class Author implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,7 +43,15 @@ public class Author {
     @ManyToMany(mappedBy = "inkBy")
     private Collection<ComicIssue> inkedComics;
 
-    public Author() {
+    // needed by JPA
+    protected Author() {
+    }
+
+    public Author(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Author name can't be null");
+        }
+        this.name = name;
     }
 
     public Author(String name, String surname) {
@@ -56,7 +65,11 @@ public class Author {
     }
 
     public String getNameSurname() {
-        return name + " " + surname;
+        StringBuilder sb = new StringBuilder(name);
+        if (surname != null) {
+            sb.append(' ').append(surname);
+        }
+        return sb.toString();
     }
 
     public String getName() {
@@ -117,6 +130,6 @@ public class Author {
 
     @Override
     public String toString() {
-        return String.format("Author{%d: %s %s}", id, name, surname);
+        return getNameSurname();
     }
 }
