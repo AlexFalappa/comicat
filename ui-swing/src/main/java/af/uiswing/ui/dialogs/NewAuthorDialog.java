@@ -4,6 +4,9 @@
 package af.uiswing.ui.dialogs;
 
 import af.model.Author;
+import af.uiswing.data.AuthorRoles;
+import af.uiswing.data.RoledAuthor;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  * Dialog to create a new comic author.
@@ -17,21 +20,21 @@ public class NewAuthorDialog extends javax.swing.JDialog {
     public NewAuthorDialog(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
-        getRootPane().setDefaultButton(bOk);
+        initExtra();
     }
 
     public NewAuthorDialog(java.awt.Dialog parent) {
         super(parent, true);
         initComponents();
-        getRootPane().setDefaultButton(bOk);
+        initExtra();
     }
 
     public boolean isOkPressed() {
         return okPressed;
     }
 
-    public Author getAuthor() {
-        return new Author(txName.getText(), txSurname.getText());
+    public RoledAuthor getRoledAuthor() {
+        return new RoledAuthor(new Author(txName.getText(), txSurname.getText()), (AuthorRoles) cbRole.getSelectedItem());
     }
 
     /**
@@ -48,6 +51,11 @@ public class NewAuthorDialog extends javax.swing.JDialog {
         txSurname = new javax.swing.JTextField();
         bOk = new javax.swing.JButton();
         bCancel = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        cbRole = new javax.swing.JComboBox<>(af.uiswing.data.AuthorRoles.values())
+        ;
+        cbAuthors = new com.jidesoft.swing.AutoCompletionComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("New Author");
@@ -76,6 +84,16 @@ public class NewAuthorDialog extends javax.swing.JDialog {
             }
         });
 
+        jLabel3.setText("Role");
+
+        jLabel4.setText("Quick search");
+
+        cbAuthors.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbAuthorsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -83,23 +101,24 @@ public class NewAuthorDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txName))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txSurname))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(bCancel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bOk)))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txName)
+                    .addComponent(txSurname)
+                    .addComponent(cbRole, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbAuthors, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(bCancel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bOk)
+                .addGap(6, 6, 6))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2});
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bCancel, bOk});
 
@@ -108,12 +127,20 @@ public class NewAuthorDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(cbAuthors, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txSurname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bOk, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -133,11 +160,34 @@ public class NewAuthorDialog extends javax.swing.JDialog {
         setVisible(false);
     }//GEN-LAST:event_bOkActionPerformed
 
+    private void cbAuthorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbAuthorsActionPerformed
+        Author auth = (Author) cbAuthors.getSelectedItem();
+        if (auth != null) {
+            txName.setText(auth.getName());
+            txSurname.setText(auth.getSurname());
+        }
+    }//GEN-LAST:event_cbAuthorsActionPerformed
+
+    private void initExtra() {
+        cbAuthors.setModel(new DefaultComboBoxModel(new Author[]{
+            new Author("Pippo", "Pluto"),
+            new Author("Paperino", "Pluto"),
+            new Author("antonio", "serra"),
+            new Author("antonio", "cavazzano")
+        }));
+        cbAuthors.setSelectedIndex(-1);
+        getRootPane().setDefaultButton(bOk);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCancel;
     private javax.swing.JButton bOk;
+    private com.jidesoft.swing.AutoCompletionComboBox cbAuthors;
+    private javax.swing.JComboBox<af.uiswing.data.AuthorRoles> cbRole;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JTextField txName;
     private javax.swing.JTextField txSurname;
     // End of variables declaration//GEN-END:variables

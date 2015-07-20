@@ -3,7 +3,7 @@
  */
 package af.uiswing.ui.dialogs;
 
-import af.model.Author;
+import af.uiswing.data.RoledAuthor;
 import javax.swing.DefaultListModel;
 
 /**
@@ -12,7 +12,7 @@ import javax.swing.DefaultListModel;
  */
 public class NewComicDialog extends javax.swing.JDialog {
 
-    private final DefaultListModel<Author> dlmAuthors = new DefaultListModel<>();
+    private final DefaultListModel<RoledAuthor> dlmAuthors = new DefaultListModel<>();
 
     /**
      * Creates new form NewComicDialog
@@ -89,6 +89,8 @@ public class NewComicDialog extends javax.swing.JDialog {
         });
 
         lAuthors.setModel(dlmAuthors        );
+        lAuthors.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lAuthors.setCellRenderer(new af.uiswing.ui.widgets.RoledAuthorListCellRenderer());
         lAuthors.setVisibleRowCount(4);
         lAuthors.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -203,9 +205,9 @@ public class NewComicDialog extends javax.swing.JDialog {
                         .addComponent(bAuthDel))
                     .addComponent(scroller))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bCreate)
-                    .addComponent(bClose))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bClose)
+                    .addComponent(bCreate))
                 .addContainerGap())
         );
 
@@ -221,7 +223,7 @@ public class NewComicDialog extends javax.swing.JDialog {
         nad.setLocationRelativeTo(lAuthors);
         nad.setVisible(true);
         if (nad.isOkPressed()) {
-            dlmAuthors.addElement(nad.getAuthor());
+            dlmAuthors.addElement(nad.getRoledAuthor());
         }
     }//GEN-LAST:event_bAuthAddActionPerformed
 
