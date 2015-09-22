@@ -14,7 +14,8 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
 
 /**
- * A comic author. Created by sasha on 23/05/15.
+ * A comic author.
+ * Created by sasha on 23/05/15.
  */
 @Entity
 @Table(indexes = {

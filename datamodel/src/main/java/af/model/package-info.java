@@ -1,8 +1,7 @@
 /**
- * Comic collection model classes.
+ * JAXB annotations to assign a namespace to comic datamodel classes.
  * Created by sasha on 30/05/15.
  */
-
 @XmlSchema(
         namespace = "http://falappa.net/comics",
         elementFormDefault = XmlNsForm.UNQUALIFIED,
